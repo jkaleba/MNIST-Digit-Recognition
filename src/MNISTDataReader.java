@@ -1,21 +1,13 @@
 import java.io.*;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
-import java.util.Scanner;
 
 
-class DataReader {
+class MNISTDataReader {
 
-    double[][][] images;
-    int[] labels;
+    public Data readData() {
+        Data data = new Data();
 
-    DataReader() {
-
-    }
-
-    public void readData() {
         Path labelsPath = Paths.get("Data/train-labels-idx1-ubyte");
         Path imagesPath = Paths.get("Data/train-images-idx3-ubyte");
 
@@ -25,9 +17,10 @@ class DataReader {
             DataInputStream labelsInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(String.valueOf(labelsPath))));
             magicNumber = labelsInputStream.readInt(); numberOfItems = labelsInputStream.readInt();
 
-            labels = new int[numberOfItems];
+            data.setSize(numberOfItems, new int[]{nRows, nCols});
+
             for(int i = 0; i < numberOfItems; i++) {
-                labels[i] = labelsInputStream.readByte();
+                data.setLabel(i, labelsInputStream.readByte());
             }
             labelsInputStream.close();
 
@@ -36,12 +29,10 @@ class DataReader {
                 dataInputStream.readInt();
             }
 
-            images = new double[numberOfItems][nRows][nCols];
-
             for(int i = 0; i < numberOfItems; i++) {
                 for(int j = 0; j < nRows; j++) {
                     for(int k = 0; k < nCols; k++) {
-                        images[i][j][k] = (double)dataInputStream.read() / 255;
+                        data.setImageElement(i, j, k, (double)dataInputStream.read() / 255);
                     }
                 }
             }
@@ -50,5 +41,6 @@ class DataReader {
         } catch(IOException e) {
             e.printStackTrace();
         }
+        return data;
     }
 }
