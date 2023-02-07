@@ -5,11 +5,19 @@ import java.nio.file.Paths;
 
 class MNISTDataReader {
 
-    public Data readData() {
+    public Data readTrainingData() {
+        return readData("Data/train");
+    }
+
+    public Data readTestData() {
+        return readData("Data/t10k");
+    }
+
+    private Data readData(String pathname) {
         Data data = new Data();
 
-        Path labelsPath = Paths.get("Data/train-labels-idx1-ubyte");
-        Path imagesPath = Paths.get("Data/train-images-idx3-ubyte");
+        Path labelsPath = Paths.get(pathname + "-labels-idx1-ubyte");
+        Path imagesPath = Paths.get(pathname + "-images-idx3-ubyte");
 
         try {
             int magicNumber, numberOfItems, nRows, nCols;

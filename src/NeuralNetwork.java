@@ -1,6 +1,7 @@
 import Maths.Matrix;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 class NeuralNetwork {
@@ -64,53 +65,39 @@ class NeuralNetwork {
         return vector;
     }
 
-    private static void shuffle(double[][][] array) {
-        int index;
-        double[][] temp;
-        Random random = new Random();
-        for(int i = array.length - 1; i > 0; i--) {
-            index = random.nextInt(i + 1);
-
-            temp = array[index];
-            array[index] = array[i];
-            array[i] = temp;
-        }
-    }
-
-    public void SGD(double[][][] trainingData, double[] desiredOutputs, int epochs, int miniBatchSize, double eta, double[][][] testData, double[] desiredTestOutput) {
-//                                  picture               0-9                                      learning rate
-
+    public void SGD(Data trainingData, int epochs, int miniBatchSize, double eta, Data testData) {
+//                                                                   learning rate
+        int left;
         for(int i = 0; i < epochs; i++) {
+            trainingData.shuffle();
 
-            shuffle(trainingData);
+            left = trainingData.length();
 
-            double[][][][] miniBatches = new double[(trainingData.length - 1) / miniBatchSize + 1][][][];
-            double[][] batchesOutput = new double[(trainingData.length - 1) / miniBatchSize + 1][];
-            for(int j = 0; j < trainingData.length; j += miniBatchSize) {
-                miniBatches[j] = new double[miniBatchSize][][];
-                batchesOutput[j] = new double[miniBatchSize];
-                for(int k = 0; k < miniBatchSize; k++) {
-                    miniBatches[j][k] = trainingData[j + k];
-                    batchesOutput[j][k] = desiredOutputs[j + k];
+            Data[] miniBatches = new Data[(trainingData.length() - 1) / miniBatchSize + 1];
+            miniBatches[i].setSize(Math.min(left, miniBatchSize));
+            for(int j = 0; j < trainingData.length(); j += miniBatchSize) {
+
+                for(int k = 0; k < miniBatches[i].length(); i++) {
+                    miniBatches[i].setImage(k, trainingData.getImage(j + k));
+                    miniBatches[i].setLabel(k, trainingData.getLabel(j + k));
                 }
+                left -= miniBatchSize;
             }
 
-            for(int j = 0; j < miniBatches.length; j++) {
-                updateMiniBach(miniBatches[i], batchesOutput[i], eta);
+            for(Data miniBatch : miniBatches) {
+                updateMiniBach(miniBatch, eta);
             }
 
-            if(testData.length != 0) {
-                System.out.println("Epoch: " + i + " " + evaluate(testData) + " " + testData.length);
+            if(testData.getImages() != null) {
+                System.out.println("Epoch: " + i + " " + evaluate(testData) + " " + testData.length());
             }
             else {
                 System.out.println("Epoch: " + i + " complete.");
             }
-
         }
-
     }
 
-    private void updateMiniBach(double[][][] miniBatchData, double[] miniBatchDesiredOutput, double eta) {
+    private void updateMiniBach(Data miniBatchData, double eta) {
         double[][] nablaB = new double[this.biases.length][];
         double[][][] nablaW = new double[this.weights.length][][];
 
@@ -128,7 +115,7 @@ class NeuralNetwork {
 
     }
 
-    private int evaluate(final double[][][] testData) {
+    private int evaluate(Data testData) {
         return 0;
     }
 
