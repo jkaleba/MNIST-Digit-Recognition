@@ -85,6 +85,7 @@ public class Matrix {
     }
 
     public static double dotProduct(double[] v1, double[] v2) {
+
         double product = 0;
         for(int i = 0; i < v1.length; i++) {
             product += v1[i] * v2[i];

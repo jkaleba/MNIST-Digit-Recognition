@@ -8,8 +8,14 @@ class Main {
         Random random = new Random();
         data.printImage(random.nextInt(100));
 
-        NeuralNetwork network = new NeuralNetwork(new int[]{5, 3, 2});
-        double[] trialOutput = network.feedforward(new double[]{1.0, 0.5, 0.5, 1, 1});
+        NeuralNetwork network = new NeuralNetwork(new int[]{764, 30, 20, 10});
+        network.showBiases();
+        
+        double[] trialInput = new double[764];
+        for(int i = 0; i < 764; i++) {
+            trialInput[i] = random.nextDouble(0, 1);
+        }
+        double[] trialOutput = network.feedforward(trialInput);
 
         System.out.println(Arrays.toString(trialOutput));
     }

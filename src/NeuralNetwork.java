@@ -20,8 +20,8 @@ class NeuralNetwork {
 
         biases = new double[this.layersNumber - 1][];
         Random random = new Random();
-        for(int i = 0; i < layersNumber - 1; i++) {
-            biases[i] = new double[sizes[i]];
+        for(int i = 0; i < biases.length; i++) {
+            biases[i] = new double[sizes[i + 1]];
             for(int j = 0; j < biases[i].length; j++) {
                 biases[i][j] = random.nextGaussian(0, 1);
             }
@@ -40,11 +40,11 @@ class NeuralNetwork {
                 }
             }
         }
-        System.out.println(Arrays.deepToString(biases));
-        System.out.println();
-        for(var row: weights) {
-            System.out.println(Arrays.deepToString(row));
-        }
+//        System.out.println(Arrays.deepToString(biases));
+//        System.out.println();
+//        for(var row: weights) {
+//            System.out.println(Arrays.deepToString(row));
+//        }
 
     }
 
@@ -57,12 +57,24 @@ class NeuralNetwork {
         for(int phase = 0; phase < layersNumber - 1; phase++) {
             double [] layerOutput = new double[sizes[phase + 1]];
 
-            for(int i = 0; i < sizes[phase + 1]; i++) {
+            for(int i = 0; i < layerOutput.length; i++) {
                 layerOutput[i] = sigmoid(Matrix.dotProduct(weights[phase][i], vector) + biases[phase][i]);
             }
             vector = layerOutput;
         }
         return vector;
+    }
+
+    public void showWeights() {
+        for(var row : weights) {
+            System.out.println(Arrays.deepToString(row));
+        }
+    }
+
+    public void showBiases() {
+        for(var row : biases) {
+            System.out.println(Arrays.toString(row));
+        }
     }
 
     public void SGD(Data trainingData, int epochs, int miniBatchSize, double eta, Data testData) {
@@ -111,6 +123,11 @@ class NeuralNetwork {
                 Arrays.fill(nablaW[i][j], 0);
             }
         }
+
+        for(int i = 0; i < miniBatchData.length(); i++) {
+
+        }
+
 
 
     }

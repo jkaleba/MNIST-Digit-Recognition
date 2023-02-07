@@ -106,5 +106,4 @@ class Data {
             this.swap(index, i);
         }
     }
-
 }
