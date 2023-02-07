@@ -77,7 +77,7 @@ class NeuralNetwork {
         }
     }
 
-    public void SGD(double[][][] trainingData, int[] desiredOutputs, int epochs, int miniBatchSize, double eta, double[][][] testData, int[] desiredTestOutput) {
+    public void SGD(double[][][] trainingData, double[] desiredOutputs, int epochs, int miniBatchSize, double eta, double[][][] testData, double[] desiredTestOutput) {
 //                                  picture               0-9                                      learning rate
 
         for(int i = 0; i < epochs; i++) {
@@ -85,15 +85,18 @@ class NeuralNetwork {
             shuffle(trainingData);
 
             double[][][][] miniBatches = new double[(trainingData.length - 1) / miniBatchSize + 1][][][];
+            double[][] batchesOutput = new double[(trainingData.length - 1) / miniBatchSize + 1][];
             for(int j = 0; j < trainingData.length; j += miniBatchSize) {
                 miniBatches[j] = new double[miniBatchSize][][];
+                batchesOutput[j] = new double[miniBatchSize];
                 for(int k = 0; k < miniBatchSize; k++) {
-                    miniBatches[j][k] = trainingData[j];
+                    miniBatches[j][k] = trainingData[j + k];
+                    batchesOutput[j][k] = desiredOutputs[j + k];
                 }
             }
 
-            for(var batch : miniBatches) {
-                updateMiniBach(batch, eta);
+            for(int j = 0; j < miniBatches.length; j++) {
+                updateMiniBach(miniBatches[i], batchesOutput[i], eta);
             }
 
             if(testData.length != 0) {
@@ -107,9 +110,21 @@ class NeuralNetwork {
 
     }
 
-    private void updateMiniBach(double[][][] miniBatch, double eta) {
-        double[] nablaB = new double[this.biases.length];
-        double[] nablaW = new double[this.weights.length];
+    private void updateMiniBach(double[][][] miniBatchData, double[] miniBatchDesiredOutput, double eta) {
+        double[][] nablaB = new double[this.biases.length][];
+        double[][][] nablaW = new double[this.weights.length][][];
+
+        for(int i = 0; i < biases.length; i++) {
+            nablaB[i] = new double[biases[i].length];
+            Arrays.fill(nablaB[i], 0.0);
+
+            nablaW[i] = new double[weights[i].length][];
+            for(int j = 0; j < weights[i].length; j++) {
+                nablaW[i][j] = new double[weights[i][j].length];
+                Arrays.fill(nablaW[i][j], 0);
+            }
+        }
+
 
     }
 
