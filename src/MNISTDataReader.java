@@ -38,10 +38,8 @@ class MNISTDataReader {
             }
 
             for(int i = 0; i < numberOfItems; i++) {
-                for(int j = 0; j < nRows; j++) {
-                    for(int k = 0; k < nCols; k++) {
-                        data.setImageElement(i, j, k, (double)dataInputStream.read() / 255);
-                    }
+                for(int j = 0; j < nRows * nCols; j++) {
+                    data.setImageElement(i, j, (double)dataInputStream.read() / 255);
                 }
             }
             dataInputStream.close();

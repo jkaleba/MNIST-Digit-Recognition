@@ -1,11 +1,9 @@
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 
 class Data {
-
-    private double[][][] images;
-    private int[] labels;
+    private double[][] images;
+    private double[][] labels;
 
     public Data() {
 
@@ -18,18 +16,18 @@ class Data {
     }
 
     public void setSize(int size) {
-        this.images = new double[size][][];
-        this.labels = new int[size];
+        this.images = new double[size][];
+        this.labels = new double[size][10];
     }
     public void setSize(int size, int[] imageDimension) {
-        this.images = new double[size][imageDimension[0]][imageDimension[1]];
-        this.labels = new int[size];
+        this.images = new double[size][imageDimension[0] * imageDimension[1]];
+        this.labels = new double[size][10];
     }
 
-    double[][][] getImages() {
+    double[][] getImages() {
         return images;
     }
-    double[][] getImage(int idx) {
+    double[] getImage(int idx) {
         return images[idx];
     }
 
@@ -37,57 +35,38 @@ class Data {
         return labels.length;
     }
 
-    int[] getLabels() {
+    double[][] getLabels() {
         return labels;
     }
-    int getLabel(int idx) {
+    double[] getLabel(int idx) {
         return labels[idx];
     }
 
-    void setLabel(int idx, int label) {
-        this.labels[idx] = label;
+    void setLabel(int idx, double[] labelVector) {
+        labels[idx] = labelVector;
+    }
+    void setLabel(int idx, int value) {
+        Arrays.fill(this.labels[idx], .0);
+        this.labels[idx][value] = 1.0;
     }
 
-    void setImage(int idx, double[][] image) {
+    void setImage(int idx, double[] image) {
         this.images[idx] = image;
     }
 
-    void setImageElement(int i, int j, int k, double value) {
-        this.images[i][j][k] = value;
+    void setImageElement(int i, int j, double value) {
+        this.images[i][j] = value;
     }
 
     void printLabels() {
         System.out.println(Arrays.toString(labels));
     }
-    void printImage(int idx) {
-        for(int i = 0; i < images[idx].length; i++) {
-            for(int j = 0; j < images[idx][i].length; j++) {
-                String printVal = images[idx][i][j] == 0 ? "" : "1";
-                System.out.print(printVal + " ");
-            }
-            System.out.println();
-        }
-    }
-    void printImages() {
-        for(int i = 0; i < this.images.length; i++) {
-            printImage(i);
-        }
-    }
 
-    void showImage(int idx) {
-        for(int i = 0; i < images[idx].length; i++) {
-            for(int j = 0; j < images[idx][i].length; j++) {
-                String printVal = images[idx][i][j] == 0 ? "" : String.valueOf(images[idx][i][j]);
-                System.out.print(printVal + " ");
-            }
-            System.out.println();
-        }
-    }
 
     void swap(int src, int dest) {
 
-        double[][] tempImg = images[src];
-        int tempLbl = labels[src];
+        double[] tempImg = images[src];
+        double[] tempLbl = labels[src];
 
         images[src] = images[dest];
         labels[src] = labels[dest];
@@ -107,12 +86,24 @@ class Data {
         }
     }
 
+    void printImage(int idx) {
+        System.out.println(Arrays.toString(labels[idx]));
+
+        for(int i = 0; i < images[idx].length; i += 28) {
+            for(int j = i; j < i + 28; j++) {
+                String printVal = images[idx][j] == 0 ? "" : "1";
+                System.out.print(printVal + " ");
+            }
+            System.out.println();
+        }
+    }
+
+
+
     void fill(int value) {
         for(int i = 0; i < this.length(); i++) {
-            this.labels[i] = value;
-            for(int j = 0; j < images[0].length; i++) {
-                Arrays.fill(images[i][j], value);
-            }
+            Arrays.fill(this.labels[i], value);
+            Arrays.fill(this.images[i], value);
         }
     }
 }

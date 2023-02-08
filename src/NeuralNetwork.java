@@ -1,7 +1,6 @@
 import Maths.Matrix;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Random;
 
 class NeuralNetwork {
@@ -40,12 +39,6 @@ class NeuralNetwork {
                 }
             }
         }
-//        System.out.println(Arrays.deepToString(biases));
-//        System.out.println();
-//        for(var row: weights) {
-//            System.out.println(Arrays.deepToString(row));
-//        }
-
     }
 
     private static double sigmoid(double z) {
@@ -86,12 +79,13 @@ class NeuralNetwork {
             left = trainingData.length();
 
             Data[] miniBatches = new Data[(trainingData.length() - 1) / miniBatchSize + 1];
-            miniBatches[i].setSize(Math.min(left, miniBatchSize));
             for(int j = 0; j < trainingData.length(); j += miniBatchSize) {
 
+                miniBatches[j].setSize(Math.min(left, miniBatchSize));
+
                 for(int k = 0; k < miniBatches[i].length(); i++) {
-                    miniBatches[i].setImage(k, trainingData.getImage(j + k));
-                    miniBatches[i].setLabel(k, trainingData.getLabel(j + k));
+                    miniBatches[j].setImage(k, trainingData.getImage(j + k));
+                    miniBatches[j].setLabel(k, trainingData.getLabel(j + k));
                 }
                 left -= miniBatchSize;
             }
@@ -109,23 +103,13 @@ class NeuralNetwork {
         }
     }
 
-
-    private Data backPropagation(double[][] image, int label) {
+    private Data backPropagation(double[] image, double[] label) {
         Data nabla = new Data();
         nabla.setSize(this.biases.length, new int[]{this.weights[0].length, this.weights[0][0].length});
         nabla.fill(0);
-        
+
 
         return new Data();
-    }
-
-    double[] linearize(double[][] image) {
-        double[] linearImage = new double[image.length * image[0].length];
-
-        for(int i = 0; i < linearImage.length; i++) {
-            linearImage[i] = image[i / image.length][i % image[0].length];
-        }
-        return linearImage;
     }
 
     private void updateMiniBatch(Data miniBatchData, double eta) {
@@ -138,17 +122,10 @@ class NeuralNetwork {
 
         for(int i = 0; i < miniBatchData.length(); i++) {
             delta = backPropagation(miniBatchData.getImage(i), miniBatchData.getLabel(i));
-
         }
-
-
-
-
     }
 
     private int evaluate(Data testData) {
         return 0;
     }
-
-
 }

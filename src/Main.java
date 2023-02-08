@@ -6,10 +6,10 @@ class Main {
 
         Data data = new MNISTDataReader().readTrainingData();
         Random random = new Random();
-        data.printImage(random.nextInt(100));
+
+        data.printImage(random.nextInt(200));
 
         NeuralNetwork network = new NeuralNetwork(new int[]{764, 30, 20, 10});
-        network.showBiases();
 
         double[] trialInput = new double[764];
         for(int i = 0; i < 764; i++) {
