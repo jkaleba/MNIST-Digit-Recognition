@@ -106,4 +106,13 @@ class Data {
             this.swap(index, i);
         }
     }
+
+    void fill(int value) {
+        for(int i = 0; i < this.length(); i++) {
+            this.labels[i] = value;
+            for(int j = 0; j < images[0].length; i++) {
+                Arrays.fill(images[i][j], value);
+            }
+        }
+    }
 }
