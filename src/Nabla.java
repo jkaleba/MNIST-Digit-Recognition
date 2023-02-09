@@ -1,23 +1,24 @@
-import java.util.Arrays;
+import Maths.*;
+
+import java.util.Random;
 
 class Nabla {
-    double[][] biases;
-    double[][][] weights;
+    Vector[] biases;
+    Matrix[] weights;
 
     public Nabla() {}
 
     void setSize(int[] sizes) {
-        biases = new double[sizes.length - 1][];
+
+        biases = new Vector[sizes.length -1];
+        Random random = new Random();
         for(int i = 0; i < biases.length; i++) {
-            biases[i] = new double[sizes[i + 1]];
+            biases[i] = new Vector(sizes[i + 1]);
         }
 
-        weights = new double[sizes.length - 1][][];
+        weights = new Matrix[sizes.length - 1];
         for(int i = 0; i < sizes.length - 1; i++) {
-            weights[i] = new double[sizes[i + 1]][];
-            for(int j = 0; j < weights[i].length; j++) {
-                weights[i][j] = new double[sizes[i]];
-            }
+            weights[i] = new Matrix(sizes[i + 1], sizes[i]);
         }
     }
 
@@ -25,16 +26,38 @@ class Nabla {
         return biases.length;
     }
 
-    void setBiases(int idx, double[] biases) {
+    Vector getBiases(int idx) {
+        return biases[idx];
+    }
+
+    Matrix getWeights(int idx) {
+        return weights[idx];
+    }
+
+    void setBiases(int idx, Vector biases) {
         this.biases[idx] = biases;
     }
 
-    void fill(int value) {
+    void setWeights(int idx, Matrix weights) {
+        this.weights[idx] = weights;
+    }
+
+    void updateBiases(Nabla delta) {
         for(int i = 0; i < biases.length; i++) {
-            Arrays.fill(biases[i], value);
-            for(int j = 0; j < weights[i].length; j++) {
-                Arrays.fill(weights[i][j], value);
-            }
+            biases[i] = Maths.add(biases[i], delta.getBiases(i));
+        }
+    }
+
+    void updateWeights(Nabla delta) {
+        for(int i = 0; i < weights.length; i++) {
+            weights[i] = Maths.add(weights[i], delta.getWeights(i));
+        }
+    }
+
+    void fill(double value) {
+        for(int i = 0; i < biases.length; i++) {
+            biases[i].fill(0);
+            weights[i].fill(0);
         }
     }
 }

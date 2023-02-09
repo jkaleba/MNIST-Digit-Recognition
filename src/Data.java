@@ -49,6 +49,9 @@ class Data {
         labels[idx].fill(0);
         labels[idx].set(value, 1.0);
     }
+    void setLabel(int idx, Vector label) {
+        labels[idx] = label;
+    }
     void setImage(int idx, Vector image) {
         this.images[idx] = image;
     }
@@ -56,11 +59,6 @@ class Data {
     void setImageElement(int idx, int i, double value) {
         images[idx].set(i, value);
     }
-
-    void printLabels() {
-        System.out.println(Arrays.toString(labels));
-    }
-
 
     void swap(int src, int dest) {
         Vector tempImg = images[src]; Vector tempLbl = labels[src];
@@ -92,7 +90,7 @@ class Data {
         }
     }
 
-    void fill(int value) {
-
+    void printLabels() {
+        System.out.println(Arrays.toString(labels));
     }
 }

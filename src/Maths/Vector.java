@@ -8,10 +8,6 @@ public class Vector extends Matrix {
         super(depth, 1);
     }
 
-    public int length() {
-        return super.values.length;
-    }
-
     public void set(int i, double value) {
         super.set(i, 0, value);
     }

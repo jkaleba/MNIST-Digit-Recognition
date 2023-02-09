@@ -1,7 +1,6 @@
 import Maths.*;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -24,8 +23,8 @@ class NeuralNetwork {
         biases = new Vector[this.layersNumber -1];
         Random random = new Random();
         for(int i = 0; i < biases.length; i++) {
-            biases[i] = new Vector(sizes[i] + 1);
-            for(int j = 0; j < biases[i].length(); j++) {
+            biases[i] = new Vector(sizes[i + 1]);
+            for(int j = 0; j < biases[i].depth(); j++) {
                 biases[i].set(j, random.nextGaussian(0, 1));
             }
         }
@@ -36,7 +35,7 @@ class NeuralNetwork {
  */
         weights = new Matrix[this.layersNumber - 1];
         for(int i = 0; i < layersNumber - 1; i++) {
-            weights[i] = new Matrix(sizes[i + 1]);
+            weights[i] = new Matrix(sizes[i + 1], sizes[i]);
             for(int j = 0; j < weights[i].depth(); j++) {;
                 for(int k = 0; k < weights[i].width(); k++) {
                     weights[i].set(j, k, random.nextGaussian(0, 1));
@@ -52,107 +51,108 @@ class NeuralNetwork {
         return vector;
     }
 
-//    public void showWeights() {
-//        for(var row : weights) {
-//            System.out.println(Arrays.deepToString(row));
-//        }
-//    }
-//
-//    public void showBiases() {
-//        for(var row : biases) {
-//            System.out.println(Arrays.toString(row));
-//        }
-//    }
-
     public void SGD(Data trainingData, int epochs, int miniBatchSize, double eta, Data testData) {
 //                                                                   learning rate
-//        int left;
-//        for(int i = 0; i < epochs; i++) {
-//            trainingData.shuffle();
-//
-//            left = trainingData.length();
-//
-//            Data[] miniBatches = new Data[(trainingData.length() - 1) / miniBatchSize + 1];
-//            for(int j = 0; j < trainingData.length(); j += miniBatchSize) {
-//
-//                miniBatches[j].setSize(Math.min(left, miniBatchSize));
-//
-//                for(int k = 0; k < miniBatches[i].length(); i++) {
-//                    miniBatches[j].setImage(k, trainingData.getImage(j + k));
-//                    miniBatches[j].setLabel(k, trainingData.getLabel(j + k));
-//                }
-//                left -= miniBatchSize;
-//            }
-//
-//            for(Data miniBatch : miniBatches) {
-//                updateMiniBatch(miniBatch, eta);
-//            }
-//
-//            if(testData.getImages() != null) {
-//                System.out.println("Epoch: " + i + " " + evaluate(testData) + " " + testData.length());
-//            }
-//            else {
-//                System.out.println("Epoch: " + i + " complete.");
-//            }
-//        }
+        int left;
+        for(int i = 0; i < epochs; i++) {
+            trainingData.shuffle();
+
+            left = trainingData.length();
+
+            Data[] miniBatches = new Data[(trainingData.length() - 1) / miniBatchSize + 1];
+            for(int j = 0; j < miniBatches.length; j += 1) {
+                miniBatches[j] = new Data(Math.min(left, miniBatchSize), new int[]{28, 28});
+
+                for(int k = 0; k < miniBatches[j].length(); k++) {
+                    miniBatches[j].setImage(k, trainingData.getImage(trainingData.length() - left));
+                    miniBatches[j].setLabel(k, trainingData.getLabel(trainingData.length() - left));
+                }
+                left -= miniBatchSize;
+            }
+
+
+            for(Data miniBatch : miniBatches) {
+                updateMiniBatch(miniBatch, eta);
+            }
+
+            if(testData != null) {
+                System.out.println("Epoch: " + (i + 1) + " " + evaluate(testData) + " " + testData.length());
+            }
+            else {
+                System.out.println("Epoch: " + (i + 1) + " complete.");
+            }
+        }
     }
 
-    public Nabla backPropagation(double[] image, double[] label) {
-//        Nabla nabla = new Nabla();
-//        nabla.setSize(sizes);
-//        nabla.fill(0);
+    public Nabla backPropagation(Vector image, Vector label) {
+        Nabla nabla = new Nabla();
+        nabla.setSize(sizes);
+        nabla.fill(0);
+
 ////  Feedforward
-//        double[][] activation = new double[1][];
-//        activation[0] = image;
-//
-//        List<double[][]> activations = new ArrayList<>();
-//        activations.add(activation);
-//
-//        List<double[][]> zs = new ArrayList<>();
-//
-//        for(int phase = 0; phase < layersNumber - 1; phase++) {
-//
-//            double[][] z = Maths.weirdAddition(
-//                    Maths.multiply(
-//                            weights[phase], activation
-//                    ),
-//                    biases[phase]
-//            );
-//            System.out.println(Arrays.deepToString(z));
-//            zs.add(z);
-//
-//            activation = sigmoid(z);
-//            activations.add(activation);
-//        }
+        Vector activation = image;
+        List<Vector> activations = new ArrayList<>();
+        activations.add(activation);
+
+        List<Vector> zs = new ArrayList<>();
+
+        for(int phase = 0; phase < layersNumber - 1; phase++) {
+
+            Vector z = Maths.add(Maths.multiply(weights[phase], activation), biases[phase]);
+            zs.add(z);
+
+            activation = sigmoid(z);
+            activations.add(activation);
+        }
 //  Backward pass
-//        double[][] delta = Maths.multiply(
-//            costDerivative(activations.get(activation.length - 1), label), sigmoidDerivative(zs.get(zs.size() - 1)));
-//
-////        nabla.setBiases(nabla.length() - 1, delta);
-//
-//
-//        return nabla;
-//    }
-//
-//
-//    double[][] costDerivative(double[][] outputActivations, double[] y) {
-//        return Maths.weirdSubtract(outputActivations, y);
-        return new Nabla();
+
+        Vector delta = multiplyElementwise(costDerivative(
+                activations.get(activations.size() - 1), label),
+                sigmoidDerivative(zs.get(zs.size() - 1)));
+
+        nabla.setBiases(nabla.length() - 1, delta);
+        nabla.setWeights(nabla.length() - 1, multiply(
+                delta, activations.get(activations.size() - 2).transpose()));
+
+        for(int l = 2; l < layersNumber; l++) {
+            Vector z = zs.get(zs.size() - l);
+
+            Vector sp = sigmoidDerivative(z);
+
+            delta = multiplyElementwise(multiply(weights[weights.length -l + 1].transpose(), delta), sp);
+
+            nabla.setBiases(nabla.length() - l, delta);
+            nabla.setWeights(nabla.length() - l, multiply(
+                    delta, activations.get(activations.size() - l - 1).transpose()));
+        }
+
+        return nabla;
     }
 
+    private Vector costDerivative(Vector outputActivation, Vector y) {
+        return subtract(outputActivation, y);
+    }
 
-//    private void updateMiniBatch(Data miniBatchData, double eta) {
-//
-//        Nabla nabla = new Nabla();
-//        nabla.setSize(sizes);
-//        nabla.fill(0);
-//
-//        Nabla delta;
-//
-//        for(int i = 0; i < miniBatchData.length(); i++) {
-//            delta = backPropagation(miniBatchData.getImage(i), miniBatchData.getLabel(i));
-//        }
-//    }
+    private void updateMiniBatch(Data miniBatchData, double eta) {
+        Nabla nabla = new Nabla();
+        nabla.setSize(sizes);
+        nabla.fill(0);
+
+        Nabla delta;
+
+        for(int i = 0; i < miniBatchData.length(); i++) {
+            delta = backPropagation(miniBatchData.getImage(i), miniBatchData.getLabel(i));
+
+            nabla.updateBiases(delta);
+            nabla.updateWeights(delta);
+        }
+
+        for(int i = 0; i < layersNumber - 1; i++) {
+            weights[i] = subtract(weights[i],
+                    multi(eta / miniBatchData.length(), nabla.getWeights(i)));
+            biases[i] = subtract(biases[i], multi(eta / miniBatchData.length(), nabla.getBiases(i)));
+        }
+    }
 
     private int evaluate(Data testData) {
         return 0;

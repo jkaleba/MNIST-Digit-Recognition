@@ -1,6 +1,7 @@
 package Maths;
 
 import java.util.Arrays;
+import java.util.Random;
 
 public class Matrix {
 
@@ -10,10 +11,19 @@ public class Matrix {
         values = new double[depth][width];
     }
 
-    public Matrix(int depth) {
+    protected Matrix(int depth) {
         values = new double[depth][1];
     }
 
+    public Matrix transpose() {
+        Matrix result = new Matrix(values[0].length, values.length);
+        for(int i = 0; i < values[0].length; i++) {
+            for(int j = 0; j < values.length; j++) {
+                result.set(i, j, values[j][i]);
+            }
+        }
+        return result;
+    }
 
     public Matrix reshape(int depth, int width) {
 
@@ -21,14 +31,25 @@ public class Matrix {
             System.out.println("Wrong dimensions");
         }
         Matrix matrix = new Matrix(depth, width);
-        double[][] result = new double[depth][width];
 
         int index = 0;
         while(index != depth * width) {
-            result[index / depth][index % width] =
-                    values[index / values.length][index % values[0].length];
+            matrix.set(index / depth, index % width, values[index / values.length][index % values[0].length]);
+            index++;
         }
         return matrix;
+    }
+
+    public static Matrix unitMatrix(int depth) {
+        Matrix unitMatrix = new Matrix(depth, depth);
+        double row[];
+        for(int i = 0; i < depth; i++) {
+            row = new double[depth];
+            Arrays.fill(row, 0);
+            row[i] = 1.0;
+            unitMatrix.set(i, row);
+        }
+        return unitMatrix;
     }
 
     double[] getRow(int idx) {
@@ -56,6 +77,25 @@ public class Matrix {
         return this.values[row][col];
     }
 
+    public void print() {
+        for(final double[] value : values) {
+            System.out.println(Arrays.toString(value));
+        }
+    }
 
+    public void fill(double value) {
+        for(final double[] doubles : this.values) {
+            Arrays.fill(doubles, value);
+        }
+    }
+
+    public void fillRandom() {
+        Random random = new Random();
+        for(int i = 0; i < values.length; i++) {
+            for(int j = 0; j < values[0].length; j++) {
+                set(i, j, random.nextInt(10));
+            }
+        }
+    }
 }
 
