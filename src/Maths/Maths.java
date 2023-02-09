@@ -29,22 +29,6 @@ public class Maths {
         }
         return result;
     }
-
-    public static Matrix add(Matrix m1, Matrix m2) {
-        Matrix result = new Matrix(m1.depth(), m2.width());
-        try {
-            for(int i = 0; i < m1.depth(); i++) {
-                for(int j = 0; j < m1.width(); j++) {
-                    result.set(i, j, m1.get(i, j) + m2.get(i, j));
-                }
-            }
-        }
-        catch(IndexOutOfBoundsException indexOutOfBoundsException) {
-            System.err.println(indexOutOfBoundsException.getMessage());
-        }
-        return result;
-    }
-
     public static Matrix multi(double scalar, Matrix matrix) {
         Matrix result = new Matrix(matrix.depth(), matrix.width());
         for(int i = 0; i < result.depth(); i++) {
@@ -61,7 +45,28 @@ public class Maths {
         }
         return result;
     }
+    public static Vector multiplyElementwise(Vector v1, Vector v2) {
+        Vector result = new Vector(v1.depth());
+        for(int i = 0; i < result.depth(); i++) {
+            result.set(i, v1.get(i) * v2.get(i));
+        }
+        return result;
+    }
 
+    public static Matrix add(Matrix m1, Matrix m2) {
+        Matrix result = new Matrix(m1.depth(), m2.width());
+        try {
+            for(int i = 0; i < m1.depth(); i++) {
+                for(int j = 0; j < m1.width(); j++) {
+                    result.set(i, j, m1.get(i, j) + m2.get(i, j));
+                }
+            }
+        }
+        catch(IndexOutOfBoundsException indexOutOfBoundsException) {
+            System.err.println(indexOutOfBoundsException.getMessage());
+        }
+        return result;
+    }
     public static Vector add(Vector v1, Vector v2) {
         Vector result = new Vector(v1.depth());
         for(int i = 0; i < Math.max(v1.depth(), v2.depth()); i++) {
@@ -89,29 +94,6 @@ public class Maths {
             System.err.println(indexOutOfBoundsException.getMessage());
         }
         return result;
-    }
-
-    public static Vector multiplyElementwise(Vector v1, Vector v2) {
-        Vector result = new Vector(v1.depth());
-        for(int i = 0; i < result.depth(); i++) {
-            result.set(i, v1.get(i) * v2.get(i));
-        }
-        return result;
-    }
-
-    public static void print(int[][] matrix) {
-        try {
-            for(final int[] ints : matrix) {
-                for(int j = 0; j < matrix[0].length; j++) {
-                    System.out.print(ints[j] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
-        catch(IndexOutOfBoundsException indexOutOfBoundsException) {
-            System.err.println("Incorrect matrix.");
-        }
     }
 
     public static double sigmoid(double z) {

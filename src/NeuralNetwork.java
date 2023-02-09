@@ -69,7 +69,6 @@ class NeuralNetwork {
                 left -= miniBatchSize;
             }
 
-
             for(Data miniBatch : miniBatches) {
                 updateMiniBatch(miniBatch, eta);
             }
@@ -103,6 +102,7 @@ class NeuralNetwork {
             activation = sigmoid(z);
             activations.add(activation);
         }
+
 //  Backward pass
         Vector delta = multiplyElementwise(costDerivative(
                 activations.get(activations.size() - 1), label),
@@ -112,16 +112,16 @@ class NeuralNetwork {
         nabla.setWeights(nabla.length() - 1, multiply(
                 delta, activations.get(activations.size() - 2).transpose()));
 
-        for(int l = 2; l < layersNumber; l++) {
-            Vector z = zs.get(zs.size() - l);
+        for(int i = 2; i < layersNumber; i++) {
+            Vector z = zs.get(zs.size() - i);
 
             Vector sp = sigmoidDerivative(z);
 
-            delta = multiplyElementwise(multiply(weights[weights.length -l + 1].transpose(), delta), sp);
+            delta = multiplyElementwise(multiply(weights[weights.length -i + 1].transpose(), delta), sp);
 
-            nabla.setBiases(nabla.length() - l, delta);
-            nabla.setWeights(nabla.length() - l, multiply(
-                    delta, activations.get(activations.size() - l - 1).transpose()));
+            nabla.setBiases(nabla.length() - i, delta);
+            nabla.setWeights(nabla.length() - i, multiply(
+                    delta, activations.get(activations.size() - i - 1).transpose()));
         }
 
         return nabla;
