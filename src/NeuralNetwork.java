@@ -28,7 +28,6 @@ class NeuralNetwork {
                 biases[i].set(j, random.nextGaussian(0, 1));
             }
         }
-
 /*
         each weights[i] represents all connections weights between the i and i + 1 layer,
         each weights[i][j] represents weights between particular neurons,
@@ -105,7 +104,6 @@ class NeuralNetwork {
             activations.add(activation);
         }
 //  Backward pass
-
         Vector delta = multiplyElementwise(costDerivative(
                 activations.get(activations.size() - 1), label),
                 sigmoidDerivative(zs.get(zs.size() - 1)));
@@ -150,11 +148,21 @@ class NeuralNetwork {
         for(int i = 0; i < layersNumber - 1; i++) {
             weights[i] = subtract(weights[i],
                     multi(eta / miniBatchData.length(), nabla.getWeights(i)));
+
             biases[i] = subtract(biases[i], multi(eta / miniBatchData.length(), nabla.getBiases(i)));
         }
     }
 
     private int evaluate(Data testData) {
-        return 0;
+        int properly = 0;
+
+        for(int i = 0; i < testData.length(); i++) {
+
+            Vector currentOutput = feedforward(testData.getImage(i));
+            if(currentOutput.max() == testData.getLabel(i).max()) {
+                properly++;
+            }
+        }
+        return properly;
     }
 }

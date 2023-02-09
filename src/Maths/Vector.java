@@ -24,4 +24,17 @@ public class Vector extends Matrix {
     public void print() {
         System.out.println(Arrays.deepToString(super.values));
     }
+
+    public int max() {
+        double maxV = -10;
+        int idx = -1;
+        for(int i = 0; i < values.length; i++) {
+            if(values[i][0] > maxV) {
+                maxV = values[i][0];
+                idx = i;
+            }
+        }
+        return idx;
+    }
+
 }

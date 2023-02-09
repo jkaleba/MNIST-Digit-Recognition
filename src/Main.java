@@ -1,19 +1,11 @@
-import Maths.*;
-import Maths.Vector;
-
-
-import java.util.Arrays;
-import java.util.Random;
-
 class Main {
     public static void main(String[] args) {
 
         Data trainingData = new MNISTDataReader().readTrainingData();
-        Random random = new Random();
 
-        NeuralNetwork network = new NeuralNetwork(new int[]{784, 20, 10});
+        NeuralNetwork network = new NeuralNetwork(new int[]{784, 30, 10});
+        Data testData = new MNISTDataReader().readTestData();
 
-        network.SGD(trainingData, 10, 10, 3, null);
-
+        network.SGD(trainingData, 100, 5, 3, testData);
     }
 }
