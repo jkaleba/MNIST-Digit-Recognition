@@ -1,6 +1,8 @@
 import Maths.Matrix;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 class NeuralNetwork {
@@ -44,16 +46,39 @@ class NeuralNetwork {
     private static double sigmoid(double z) {
         return 1.0 / (1.0 + Math.exp(-z));
     }
+    private static double sigmoidDerivative(double z) {
+        return sigmoid(z) * (1 - sigmoid(z));
+    }
+
+    private static double[] sigmoid(double[] z) {
+        double[] result = new double[z.length];
+        for(int i = 0; i < z.length; i++) {
+            result[i] = sigmoid(z[i]);
+        }
+        return result;
+    }
+    private static double[] sigmoidDerivative(double[] z) {
+        double[] result = new double[z.length];
+        for(int i = 0; i < z.length; i++) {
+            result[i] = sigmoidDerivative(z[i]);
+        }
+        return result;
+    }
+    private static double[][] sigmoid(double[][] z) {
+        double[][] result = new double[z.length][];
+        for(int i = 0; i < z.length; i++) {
+            result[i] = sigmoid(z[i]);
+        }
+        return result;
+    }
 
     public double[] feedforward(double[] vector) {
 
         for(int phase = 0; phase < layersNumber - 1; phase++) {
-            double [] layerOutput = new double[sizes[phase + 1]];
-
-            for(int i = 0; i < layerOutput.length; i++) {
-                layerOutput[i] = sigmoid(Matrix.dotProduct(weights[phase][i], vector) + biases[phase][i]);
-            }
-            vector = layerOutput;
+            vector = sigmoid(
+                    Matrix.add(
+                    Matrix.multiply(
+                    weights[phase], vector), biases[phase]));
         }
         return vector;
     }
@@ -103,22 +128,63 @@ class NeuralNetwork {
         }
     }
 
-    private Data backPropagation(double[] image, double[] label) {
-        Data nabla = new Data();
-        nabla.setSize(this.biases.length, new int[]{this.weights[0].length, this.weights[0][0].length});
+    public Nabla backPropagation(double[] image, double[] label) {
+        Nabla nabla = new Nabla();
+        nabla.setSize(sizes);
         nabla.fill(0);
 
 
-        return new Data();
+//  Feedforward
+        double[][] activation = new double[1][];
+        activation[0] = image;
+
+        List<double[][]> activations = new ArrayList<>();
+        activations.add(activation);
+
+        List<double[][]> zs = new ArrayList<>();
+
+        for(int phase = 0; phase < layersNumber - 1; phase++) {
+
+            double[][] z = Matrix.weirdAddition(
+                    Matrix.multiply(
+                            weights[phase], activation
+                    ),
+                    biases[phase]
+            );
+            System.out.println(Arrays.deepToString(z));
+            zs.add(z);
+
+            activation = sigmoid(z);
+            activations.add(activation);
+        }
+
+//  Backward pass
+
+//        double[] temp = sigmoidDerivative(zs.get(zs.size() - 1));
+
+//        double[] delta = Matrix.vectorMultiply(
+//            costDerivative(activations.get(activation.length - 1), label), temp);
+
+//        nabla.setBiases(nabla.length() - 1, delta);
+
+
+
+        return nabla;
     }
+
+
+    double[] costDerivative(double[] outputActivations, double[] y) {
+        return Matrix.vectorSubtract(outputActivations, y);
+    }
+
 
     private void updateMiniBatch(Data miniBatchData, double eta) {
 
-        Data nabla = new Data();
-        nabla.setSize(this.weights.length, new int[]{this.weights[0].length, this.weights[0][0].length});
+        Nabla nabla = new Nabla();
+        nabla.setSize(sizes);
         nabla.fill(0);
 
-        Data delta;
+        Nabla delta;
 
         for(int i = 0; i < miniBatchData.length(); i++) {
             delta = backPropagation(miniBatchData.getImage(i), miniBatchData.getLabel(i));

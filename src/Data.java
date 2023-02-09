@@ -98,7 +98,11 @@ class Data {
         }
     }
 
-
+    void printImages() {
+        for(int i = 0; i < images.length; i++) {
+            printImage(i);
+        }
+    }
 
     void fill(int value) {
         for(int i = 0; i < this.length(); i++) {

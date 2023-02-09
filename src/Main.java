@@ -9,14 +9,13 @@ class Main {
 
         data.printImage(random.nextInt(200));
 
-        NeuralNetwork network = new NeuralNetwork(new int[]{764, 30, 20, 10});
+        NeuralNetwork network = new NeuralNetwork(new int[]{5, 4, 3, 2});
 
-        double[] trialInput = new double[764];
-        for(int i = 0; i < 764; i++) {
-            trialInput[i] = random.nextDouble(0, 1);
-        }
-        double[] trialOutput = network.feedforward(trialInput);
+//        double[] trialOutput = network.feedforward(new double[]{0.1, 0.2, 0.3, 0.4});
+        double[] label = new double[]{0, 0, 0, 0, 1.0};
 
-        System.out.println(Arrays.toString(trialOutput));
+        network.backPropagation(new double[]{0.1, 0.2, 0.3, 0.4, 0.5}, label);
+
+//        System.out.println(Arrays.toString(trialOutput));
     }
 }

@@ -5,28 +5,48 @@ import java.util.stream.Stream;
 
 public class Matrix {
 
-    public static int[][] multiply(int[][] m1, int[][] m2) {
+    public static double[] multiply(double[][] m1, double[] v1) {
 
-        int[][] result = new int[m1.length][m2[0].length];
+        if(m1[0].length != v1.length) {
+            System.out.println(m1[0].length + " " + v1.length);
+        }
 
-        try {
-            for(int resultRow = 0; resultRow < m1[0].length; resultRow++) {
-                for(int resultCol = 0; resultCol < m2[0].length; resultCol++) {
+        double[] result = new double[m1.length];
+        Arrays.fill(result, 0);
 
-                    int newElement = 0;
-                    for(int index = 0; index < m1[0].length; index++) {
-                        newElement += m1[resultRow][index] * m2[index][resultCol];
-                    }
-
-                    result[resultRow][resultCol] = newElement;
-                }
+        for(int i = 0; i < m1.length; i++) {
+            for(int j = 0; j < v1.length; j++) {
+                result[i] += m1[i][j] * v1[j];
             }
         }
-        catch(IndexOutOfBoundsException indexOutOfBoundsException) {
-            System.err.println(indexOutOfBoundsException.getMessage());
-        }
-
         return result;
+    }
+    public static double[][] multiply(double[][] m1, double[][] m2) {
+
+        double[][] result = new double[m2.length][m1[0].length];
+
+        for(int resultRow = 0; resultRow < m1.length; resultRow++) {
+            for(int resultCol = 0; resultCol < m2.length; resultCol++) {
+
+                int newElement = 0;
+                for(int index = 0; index < m1[0].length; index++) {
+                    newElement += m1[resultRow][index] * m2[resultCol][index];
+                }
+
+                result[resultCol][resultRow] = newElement;
+            }
+        }
+        return result;
+    }
+    public static double[][] weirdAddition(double[][] activation, double[] biases) {
+        double[][] product = new double[biases.length][activation[0].length];
+        for(int i = 0; i < biases.length; i++) {
+            product[i] = activation[Math.min(i, activation.length - 1)];
+            for(int j = 0; j < activation[0].length; j++) {
+                product[i][j] += biases[i];
+            }
+        }
+        return product;
     }
 
     public static int determinant(int[][] matrix) {
@@ -69,6 +89,13 @@ public class Matrix {
         return m1;
     }
 
+    public static double[] add(double[] vector, double[] biases) {
+        for(int i = 0; i < vector.length; i++) {
+            vector[i] += biases[i];
+        }
+        return vector;
+    }
+
     public static void print(int[][] matrix) {
         try {
             for(final int[] ints : matrix) {
@@ -83,6 +110,15 @@ public class Matrix {
             System.err.println("Incorrect matrix.");
         }
     }
+
+    public static double[] vectorSubtract(double[] v1, double[] v2) {
+        double[] res = new double[v1.length];
+        for(int i = 0; i < v1.length; i++) {
+            res[i] = v1[i] - v2[i];
+        }
+        return res;
+    }
+
 
     public static double dotProduct(double[] v1, double[] v2) {
 
