@@ -5,7 +5,7 @@ I tried to make the code as clear as possible, however it's strognly subjective,
 Therefore I will create explanatory comments for each functionality, but I can get to that only from Monday.
 
 With given hyper parameters, network achieves about 80 accuracy after first epoch, going up to 90% while first 10 epochs.
-When given 100 epochs as parameter, the output presented several of 93% accuracy results, with a few reaching 94.1%.
+When given 100 epochs as parameter, output presented few results reaching 94.1%.
 
 
 Highly recommend Michael Nielsen's book http://neuralnetworksanddeeplearning.com/index.html,
