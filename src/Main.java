@@ -3,9 +3,9 @@ class Main {
 
         Data trainingData = new MNISTDataReader().readTrainingData();
 
-        NeuralNetwork network = new NeuralNetwork(new int[]{784, 30, 10});
+        NeuralNetwork network = new NeuralNetwork(new int[]{784, 28, 10});
         Data testData = new MNISTDataReader().readTestData();
 
-        network.SGD(trainingData, 100, 10, 3, testData);
+        network.SGD(trainingData, 100, 5, 3, testData);
     }
 }
