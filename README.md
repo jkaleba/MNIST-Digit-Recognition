@@ -1,6 +1,6 @@
 Hi,
 
-I tried to make the code as clear as possible, however it's strognly subjective, so it might still look odd for you.
+I tried to make the code as clear as possible, however it's strognly subjective, so it might still look odd to you.
 
 Therefore I will create explanatory comments for each functionality, but I can get to that only from Monday.
 
