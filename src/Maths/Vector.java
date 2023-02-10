@@ -36,5 +36,4 @@ public class Vector extends Matrix {
         }
         return idx;
     }
-
 }
