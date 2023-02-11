@@ -147,9 +147,9 @@ class NeuralNetwork {
 
         for(int i = 0; i < layersNumber - 1; i++) {
             weights[i] = subtract(weights[i],
-                    multi(eta / miniBatchData.length(), nabla.getWeights(i)));
+                    Maths.multiply(eta / miniBatchData.length(), nabla.getWeights(i)));
 
-            biases[i] = subtract(biases[i], multi(eta / miniBatchData.length(), nabla.getBiases(i)));
+            biases[i] = subtract(biases[i], Maths.multiply(eta / miniBatchData.length(), nabla.getBiases(i)));
         }
     }
 

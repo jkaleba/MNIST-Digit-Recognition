@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Matrix {
 
-    double[][] values;
+    protected double[][] values;
 
     public Matrix(int depth, int width) {
         values = new double[depth][width];
@@ -18,18 +18,6 @@ public class Matrix {
             }
         }
         return result;
-    }
-
-    public static Matrix unitMatrix(int depth) {
-        Matrix unitMatrix = new Matrix(depth, depth);
-        double[] row;
-        for(int i = 0; i < depth; i++) {
-            row = new double[depth];
-            Arrays.fill(row, 0);
-            row[i] = 1.0;
-            unitMatrix.set(i, row);
-        }
-        return unitMatrix;
     }
 
     public int depth() {
@@ -56,4 +44,3 @@ public class Matrix {
         }
     }
 }
-

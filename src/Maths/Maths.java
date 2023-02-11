@@ -29,7 +29,7 @@ public class Maths {
         }
         return result;
     }
-    public static Matrix multi(double scalar, Matrix matrix) {
+    public static Matrix multiply(double scalar, Matrix matrix) {
         Matrix result = new Matrix(matrix.depth(), matrix.width());
         for(int i = 0; i < result.depth(); i++) {
             for(int j = 0; j < result.width(); j++) {
@@ -38,7 +38,7 @@ public class Maths {
         }
         return result;
     }
-    public static Vector multi(double scalar, Vector vector) {
+    public static Vector multiply(double scalar, Vector vector) {
         Vector result = new Vector(vector.depth());
         for(int i = 0; i < result.depth(); i++) {
             result.set(i, scalar * vector.get(i));

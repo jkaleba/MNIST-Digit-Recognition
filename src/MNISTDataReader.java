@@ -2,7 +2,6 @@ import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
 class MNISTDataReader {
 
     public Data readTrainingData() {
