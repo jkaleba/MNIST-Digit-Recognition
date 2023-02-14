@@ -29,10 +29,7 @@ class Data {
             this.labels[i] = new Vector(10);
         }
     }
-
-    Vector[] getImages() {
-        return images;
-    }
+    
     Vector getImage(int idx) {
         return images[idx];
     }
@@ -92,5 +89,9 @@ class Data {
 
     void printLabels() {
         System.out.println(Arrays.toString(labels));
+    }
+
+    boolean classifiedProperly(Vector output, int idx) {
+        return output.max() == labels[idx].max();
     }
 }

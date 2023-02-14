@@ -29,8 +29,8 @@ class NeuralNetwork {
             }
         }
 /*
-        each weights[i] represents all connections weights between the i and i + 1 layer,
-        each weights[i][j] represents weights between particular neurons,
+        Each weights[i] represents all connections weights between the i and i + 1 layer,
+        each weights[i][j] represents weights between particular neurons.
  */
         weights = new Matrix[this.layersNumber - 1];
         for(int i = 0; i < layersNumber - 1; i++) {
@@ -45,8 +45,8 @@ class NeuralNetwork {
 
     public Vector feedforward(Vector vector) {
         /*
-            feeding network with input (image) -> method returns output provided by network
-            in its current state - it is Vector of probabilities of each number being given as input
+            Feeding network with input (image) -> method returns output provided by network
+            in its current state - it is Vector of probabilities of each number being given as input.
          */
 
         for(int phase = 0; phase < layersNumber - 1; phase++) {
@@ -57,14 +57,14 @@ class NeuralNetwork {
 
     public void SGD(Data trainingData, int epochs, int miniBatchSize, double eta, Data testData) {
         /*
-            for each epoch, after shuffling the test data,
+            For each epoch, after shuffling the test data,
             Stochastic Gradient Descent is applied step by step
             for each miniBatch (subsequence of data) and
             performed by method updateMiniBatch(...).
 
             Then, if testData path is given,
             current network accuracy is being checked
-            on images it hasn't seen before.
+            on images it hasn't been fed before.
          */
 
         int left;
@@ -102,7 +102,7 @@ class NeuralNetwork {
         nabla.setSize(sizes);
         nabla.fill(0);
 
-////  Feedforward
+//  Feedforward
         Vector activation = image;
         List<Vector> activations = new ArrayList<>();
         activations.add(activation);
@@ -147,6 +147,27 @@ class NeuralNetwork {
     }
 
     private void updateMiniBatch(Data miniBatchData, double eta) {
+        /*
+            Performing Gradient Descent for current miniBatch
+            using back propagation.
+
+            On this level algorithm is based on calculating
+            vectors of optimal "directions" which weights and biases should
+            be heading to (nabla) in order for network to minimize cost.
+
+            By "direction" is meant ratio for each variable
+            to increase or decrease relatively to all the
+            other variables.
+            For example, if there was 3 dimensional Vector
+            [[1, -2, 3]]ᵀ , then it would mean, that in order
+            to minimize cost, x3 should increase 3 times more than
+            x1 and x2 should decrease 2 times more than x1.
+
+            Then the network's weights and biases are modified
+            with eta (learning rate) and miniBatchSize taken
+            into account as well.
+         */
+
         Nabla nabla = new Nabla();
         nabla.setSize(sizes);
         nabla.fill(0);
@@ -169,12 +190,16 @@ class NeuralNetwork {
     }
 
     private int evaluate(Data testData) {
-        int properly = 0;
+        /*
+            Computing testData and counting properly
+            classified images, then returning this value.
+         */
 
+        int properly = 0;
         for(int i = 0; i < testData.length(); i++) {
 
             Vector currentOutput = feedforward(testData.getImage(i));
-            if(currentOutput.max() == testData.getLabel(i).max()) {
+            if(testData.classifiedProperly(currentOutput, i)) {
                 properly++;
             }
         }
