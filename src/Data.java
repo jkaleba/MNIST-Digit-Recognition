@@ -29,7 +29,7 @@ class Data {
             this.labels[i] = new Vector(10);
         }
     }
-    
+
     Vector getImage(int idx) {
         return images[idx];
     }
