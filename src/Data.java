@@ -9,9 +9,6 @@ class Data {
     public Data() {
 
     }
-    public Data(int size) {
-        this.setSize(size);
-    }
     public Data(int size, int[] imgDimension) {
         this.setSize(size, imgDimension);
     }
