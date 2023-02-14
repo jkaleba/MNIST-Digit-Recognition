@@ -31,17 +31,17 @@ class MNISTDataReader {
             }
             labelsInputStream.close();
 
-            DataInputStream dataInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(String.valueOf(imagesPath))));
+            DataInputStream imagesInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(String.valueOf(imagesPath))));
             for(int i = 0; i < 4; i++) {
-                dataInputStream.readInt();
+                imagesInputStream.readInt();
             }
 
             for(int i = 0; i < numberOfItems; i++) {
                 for(int j = 0; j < nRows * nCols; j++) {
-                    data.setImageElement(i, j, (double)dataInputStream.read() / 255);
+                    data.setImageElement(i, j, (double)imagesInputStream.read() / 255);
                 }
             }
-            dataInputStream.close();
+            imagesInputStream.close();
 
         } catch(IOException e) {
             e.printStackTrace();

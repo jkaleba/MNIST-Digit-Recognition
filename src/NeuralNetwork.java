@@ -44,6 +44,11 @@ class NeuralNetwork {
     }
 
     public Vector feedforward(Vector vector) {
+        /*
+            feeding network with input (image) -> method returns output provided by network
+            in its current state - it is Vector of probabilities of each number being given as input
+         */
+
         for(int phase = 0; phase < layersNumber - 1; phase++) {
             vector = sigmoid(add(multiply(weights[phase], vector), biases[phase]));
         }
@@ -51,7 +56,17 @@ class NeuralNetwork {
     }
 
     public void SGD(Data trainingData, int epochs, int miniBatchSize, double eta, Data testData) {
-//                                                                   learning rate
+        /*
+            for each epoch, after shuffling the test data,
+            Stochastic Gradient Descent is applied step by step
+            for each miniBatch (subsequence of data) and
+            performed by method updateMiniBatch(...).
+
+            Then, if testData path is given,
+            current network accuracy is being checked
+            on images it hasn't seen before.
+         */
+
         int left;
         for(int i = 0; i < epochs; i++) {
             trainingData.shuffle();
