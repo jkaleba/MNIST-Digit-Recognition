@@ -152,20 +152,21 @@ class NeuralNetwork {
             using back propagation.
 
             On this level algorithm is based on calculating
-            vectors of optimal "directions" which weights and biases should
-            be heading to (nabla) in order for network to minimize cost.
+            vectors of optimal "deflections" of each variable,
+            in order for network to minimize cost.
 
-            By "direction" is meant ratio for each variable
+            By "deflection" is meant ratio for each variable
             to increase or decrease relatively to all the
             other variables.
             For example, if there was 3 dimensional Vector
             [[1, -2, 3]]ᵀ , then it would mean, that in order
             to minimize cost, x3 should increase 3 times more than
-            x1 and x2 should decrease 2 times more than x1.
+            x1 and x2 should decrease 2 times more than x1 increases.
 
-            Then the network's weights and biases are modified
-            with eta (learning rate) and miniBatchSize taken
-            into account as well.
+            After iterating through all images in current batch,
+            computed nabla is used for modifying current
+            weights and biases, while taking eta (learning rate)
+            and batchSize into account.
          */
 
         Nabla nabla = new Nabla();
