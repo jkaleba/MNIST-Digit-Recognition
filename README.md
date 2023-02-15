@@ -2,7 +2,7 @@ Hi,
 
 I tried to make the code as clear as possible, however it's strognly subjective, so it might still look odd to you.
 
-Therefore I will create explanatory comments for each functionality, but I can get to that only from Monday.
+I hope I'll manage to finish comments at friday evening / night.
 
 With given hyper parameters, network achieves about 80 accuracy after first epoch, going up to 90% while first 10 epochs.
 When given 100 epochs as parameter, output presented few results reaching 94.1%.
