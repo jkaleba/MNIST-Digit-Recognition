@@ -1,8 +1,8 @@
 Hi,
 
 After quick preview of the code, one question certainly comes to mind - what is the point of writing such network from the absolute bottom?
-And the question is right, comparing it for instance to predefined algorithms in pytnon, this one is slow, not optymalized in any way,
-gery very far from perfect, however the point of entire project wasn't about making super quick solution to this particular problem,
+And the question is right, comparing it for instance to algorithms in predefined libraries, this code performs slowly, it is not optymalized in any way,
+very very far from perfect, however the point of entire project wasn't about making super quick solution to this particular problem,
 but rather to experience how neural networks works from inside.
 MNIST dataset served only as helpful tool in order to accomplish this goal.
 
