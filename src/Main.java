@@ -6,6 +6,6 @@ class Main {
 
         NeuralNetwork network = new NeuralNetwork(new int[]{784, 28, 10});
 
-        network.SGD(trainingData, 100, 5, 1, testData);
+        network.SGD(trainingData, 30, 5, 0.9, testData);
     }
 }

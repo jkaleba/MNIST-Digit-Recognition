@@ -98,15 +98,29 @@ class NeuralNetwork {
     }
 
     public Nabla backPropagation(Vector image, Vector label) {
+        /*
+            Object nabla represents the gradient for the cost function.
+            Nabla contains Matrix of weights and Vector of biases, exactly
+            like neural network itself.
+         */
         Nabla nabla = new Nabla();
         nabla.setSize(sizes);
         nabla.fill(0);
 
-//  Feedforward
+        /*
+            Feeding forward current image, saving input vector for each
+            stage of network, as well as its sigmoid projection -> activation
+            vector which becomes input for next stage.
+         */
         Vector activation = image;
         List<Vector> activations = new ArrayList<>();
         activations.add(activation);
 
+        /*
+            zs -> set of z Vectors.
+            Vectors are named z after book mentioned in readme
+            in order to highlight analogy.
+         */
         List<Vector> zs = new ArrayList<>();
 
         for(int phase = 0; phase < layersNumber - 1; phase++) {
@@ -118,7 +132,11 @@ class NeuralNetwork {
             activations.add(activation);
         }
 
-//  Backward pass
+        /*
+            Feeding backwards.
+            Calculating weights and biases providing minimization
+            of cost function and returning them in nabla.
+         */
         Vector delta = multiplyElementwise(costDerivative(
                 activations.get(activations.size() - 1), label),
                 sigmoidDerivative(zs.get(zs.size() - 1)));
@@ -130,9 +148,8 @@ class NeuralNetwork {
         for(int i = 2; i < layersNumber; i++) {
             Vector z = zs.get(zs.size() - i);
 
-            Vector sp = sigmoidDerivative(z);
-
-            delta = multiplyElementwise(multiply(weights[weights.length -i + 1].transpose(), delta), sp);
+            Vector sigmoidDerivative = sigmoidDerivative(z);
+            delta = multiplyElementwise(multiply(weights[weights.length -i + 1].transpose(), delta), sigmoidDerivative);
 
             nabla.setBiases(nabla.length() - i, delta);
             nabla.setWeights(nabla.length() - i, multiply(
@@ -152,16 +169,8 @@ class NeuralNetwork {
             using back propagation.
 
             On this level algorithm is based on calculating
-            vectors of optimal "deflections" of each variable,
+            vectors containing delta values of each variable,
             in order for network to minimize cost.
-
-            By "deflection" is meant ratio for each variable
-            to increase or decrease relatively to all the
-            other variables.
-            For example, if there was 3 dimensional Vector
-            [[1, -2, 3]]ᵀ , then it would mean, that in order
-            to minimize cost, x3 should increase 3 times more than
-            x1 and x2 should decrease 2 times more than x1 increases.
 
             After iterating through all images in current batch,
             computed nabla is used for modifying current
@@ -174,7 +183,6 @@ class NeuralNetwork {
         nabla.fill(0);
 
         Nabla delta;
-
         for(int i = 0; i < miniBatchData.length(); i++) {
             delta = backPropagation(miniBatchData.getImage(i), miniBatchData.getLabel(i));
 
@@ -183,6 +191,11 @@ class NeuralNetwork {
         }
 
         for(int i = 0; i < layersNumber - 1; i++) {
+            /*
+                wᵢ → wᵢ' = wᵢ - η * (∂C / ∂wᵢ)  ->>  wᵢ → wᵢ' = wᵢ - (η / m) * ∑ⱼ (∂Cxⱼ / ∂wᵢ)
+                bᵢ → bᵢ' = bᵢ - η * (∂C / ∂bᵢ)  ->>  bᵢ → bᵢ' = bᵢ - (η / m) * ∑ⱼ (∂Cxⱼ / ∂bᵢ)
+             */
+
             weights[i] = subtract(weights[i],
                     Maths.multiply(eta / miniBatchData.length(), nabla.getWeights(i)));
 
