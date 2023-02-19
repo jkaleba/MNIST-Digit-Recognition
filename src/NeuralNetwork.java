@@ -28,10 +28,11 @@ class NeuralNetwork {
                 biases[i].set(j, random.nextGaussian(0, 1));
             }
         }
-/*
-        Each weights[i] represents all connections weights between the i and i + 1 layer,
-        each weights[i][j] represents weights between particular neurons.
- */
+        
+        /*
+            Each weights[i] represents all connections weights between the i and i + 1 layer,
+            each weights[i][j] represents weights between particular neurons.
+        */
         weights = new Matrix[this.layersNumber - 1];
         for(int i = 0; i < layersNumber - 1; i++) {
             weights[i] = new Matrix(sizes[i + 1], sizes[i]);
