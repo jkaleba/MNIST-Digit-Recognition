@@ -1,14 +1,15 @@
 Hi,
 
-I tried to make the code as clear as possible, however it's strognly subjective, so it might still look odd to you.
+After quick preview of the code, one question certainly comes to mind - what is the point of writing such network from the absolute bottom?
+And the question is right, comparing it for instance to predefined algorithms in pytnon, this one is slow, not optymalized in any way,
+gery very far from perfect, however the point of entire project wasn't about making super quick solution to this particular problem,
+but rather to experience how neural networks works from inside.
+MNIST dataset served only as helpful tool in order to accomplish this goal.
 
-I hope I'll manage to finish comments at friday evening / night.
+Entirety was written with significant help coming from Michael Nielsen's book
+(which I therefore strongly recommend  -> http://neuralnetworksanddeeplearning.com/index.html)
+followed by his github repository  -> https://github.com/mnielsen/neural-networks-and-deep-learning/tree/d15df08a69ed33ae16a2fff874f83b57a956172c.
 
-With given hyper parameters, network achieves about 80 accuracy after first epoch, going up to 90% while first 10 epochs.
-When given 100 epochs as parameter, output presented few results reaching 94.1%.
+Since you're here, I hope you will find some use of this repository as well.
 
-Also worth noticing, first couple results are highly dependent from the accuracy of random wages assignment.
-
-
-Highly recommend Michael Nielsen's book http://neuralnetworksanddeeplearning.com/index.html,
-his github repository was helpful as well - https://github.com/mnielsen/neural-networks-and-deep-learning/tree/d15df08a69ed33ae16a2fff874f83b57a956172c.
+Thanks!
