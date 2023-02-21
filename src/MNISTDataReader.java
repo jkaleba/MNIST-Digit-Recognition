@@ -20,21 +20,17 @@ class MNISTDataReader {
 
         try {
             int magicNumber, numberOfItems, nRows, nCols;
-            nRows = 28; nCols = 28;
-            DataInputStream labelsInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(String.valueOf(labelsPath))));
-            magicNumber = labelsInputStream.readInt(); numberOfItems = labelsInputStream.readInt();
+            DataInputStream imagesInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(String.valueOf(imagesPath))));
+            magicNumber = imagesInputStream.readInt();
+            if(magicNumber != 2051) {
+                throw new IOException("Invalid image magic number.");
+            }
+
+            numberOfItems = imagesInputStream.readInt();
+            nRows = imagesInputStream.readInt();
+            nCols = imagesInputStream.readInt();
 
             data.setSize(numberOfItems, new int[]{nRows, nCols});
-
-            for(int i = 0; i < numberOfItems; i++) {
-                data.setLabel(i, labelsInputStream.readByte());
-            }
-            labelsInputStream.close();
-
-            DataInputStream imagesInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(String.valueOf(imagesPath))));
-            for(int i = 0; i < 4; i++) {
-                imagesInputStream.readInt();
-            }
 
             for(int i = 0; i < numberOfItems; i++) {
                 for(int j = 0; j < nRows * nCols; j++) {
@@ -42,6 +38,18 @@ class MNISTDataReader {
                 }
             }
             imagesInputStream.close();
+
+            DataInputStream labelsInputStream = new DataInputStream(new BufferedInputStream(new FileInputStream(String.valueOf(labelsPath))));
+            magicNumber = labelsInputStream.readInt();
+            if(magicNumber != 2049) {
+                throw new IOException("Invalid label magic number.");
+            }
+            numberOfItems = labelsInputStream.readInt();
+
+            for(int i = 0; i < numberOfItems; i++) {
+                data.setLabel(i, labelsInputStream.readByte());
+            }
+            labelsInputStream.close();
 
         } catch(IOException e) {
             e.printStackTrace();
